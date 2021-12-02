@@ -1,0 +1,4 @@
+APP_NAME: "hotel_rental"
+APP_PORT: "9090"
+
+DB_URI: "postgresql://postgres:postgres@localhost:5432/hotel_rental?sslmode=disable"
