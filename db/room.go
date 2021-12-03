@@ -65,14 +65,18 @@ func (s *pgStore) GetRoom(ctx context.Context, roomID int64, hotelID int64) (roo
 	return
 }
 func (s *pgStore) RentRoom(ctx context.Context, req BookRoomRequest) (err error) {
-	_, err = s.db.ExecContext(ctx, rentRoom, req.RoomID, req.HotelID, req.UserID, req.From, req.To)
+	_, err = s.db.ExecContext(ctx, rentRoom, req.RoomID, req.UserID, req.From, req.To)
 	return
 }
 
-func (s *pgStore) SlotAvailability(ctx context.Context, roomID, hotelID int64, from, to string) (available bool, err error) {
+// SlotAvailability will check if the slot is available for renting
+// the slot is available if
+// there are no bookings whose rented_to is less than the new booking start_time
+// and rented_form is more than the end_time
+func (s *pgStore) SlotAvailability(ctx context.Context, roomID int64, from, to string) (available bool, err error) {
 	var slot Booking
 	fmt.Println("from", from, "to", to)
-	err = s.db.GetContext(ctx, &slot, slotAvailability, roomID, hotelID, to)
+	err = s.db.GetContext(ctx, &slot, slotAvailability, roomID, from, to)
 	if err != nil {
 		if err.Error() == sql.ErrNoRows.Error() {
 			fmt.Println("no rows")

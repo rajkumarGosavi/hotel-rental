@@ -8,9 +8,8 @@ const (
 	createRoom    = `INSERT INTO rooms (hotel_id, rate_per_hour)
 		VALUES ($1, $2)`
 	getRoom  = `SELECT * FROM rooms WHERE id=$1 AND hotel_id=$2`
-	rentRoom = `INSERT INTO bookings  (room_id, hotel_id, user_id, rented_from, rented_to)
-		VALUES ($1, $2, $3, $4, $5)`
+	rentRoom = `INSERT INTO bookings  (room_id, user_id, rented_from, rented_to)
+		VALUES ($1, $2, $3, $4)`
 	// updateIsRentedForRoom = `UPDATE rooms SET is_rented=$3 WHERE id=$1 AND hotel_id=$2`
-	slotAvailability = `SELECT * from bookings WHERE room_id=$1 AND hotel_id=$2 AND 
-		(rented_from > $3)`
+	slotAvailability = `SELECT * FROM bookings WHERE room_id=$1 AND (rented_to >= $2 AND rented_from <= $3);`
 )

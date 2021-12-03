@@ -28,7 +28,7 @@ func (s *roomService) CreateRoom(ctx context.Context, room db.Room) (err error) 
 	return
 }
 
-func (s *roomService) GetRoom(ctx context.Context, roomID int64, hotelID int64) (room db.Room, err error) {
+func (s *roomService) GetRoom(ctx context.Context, roomID, hotelID int64) (room db.Room, err error) {
 	room, err = s.Store.GetRoom(ctx, roomID, hotelID)
 	return
 }
@@ -40,7 +40,7 @@ func (s *roomService) RentRoom(ctx context.Context, req db.BookRoomRequest) (sta
 		return
 	}
 
-	isAvailable, err := s.Store.SlotAvailability(ctx, req.RoomID, req.HotelID, req.From.Format(layout), req.To.Format(layout))
+	isAvailable, err := s.Store.SlotAvailability(ctx, req.RoomID, req.From.Format(layout), req.To.Format(layout))
 	if err != nil {
 		log.Println("failed to check slot availability", err.Error())
 		return
@@ -53,11 +53,10 @@ func (s *roomService) RentRoom(ctx context.Context, req db.BookRoomRequest) (sta
 	}
 
 	err = s.Store.RentRoom(ctx, db.BookRoomRequest{
-		RoomID:  room.ID,
-		HotelID: room.HotelID,
-		From:    req.From,
-		To:      req.To,
-		UserID:  req.UserID,
+		RoomID: room.ID,
+		From:   req.From,
+		To:     req.To,
+		UserID: req.UserID,
 	})
 	status = db.RentedSuccessfully
 	return
