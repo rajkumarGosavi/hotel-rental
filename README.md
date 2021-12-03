@@ -14,34 +14,35 @@ INSERT INTO users (name) VALUES ('test_user');
 
 <!-- create hotel -->
 curl POST -d '{
-    "name": "XYZ",
-    "address": "xyz street"
+    "name": "The Continental",
+    "address": "JW street"
 }' -v -i 'localhost:9090/hotel'
-
-<!-- get hotel details -->
-curl -X GET -v -i 'localhost:9090/hotel/1'
 
 <!-- list hotels -->
 curl -X GET -v -i 'localhost:9090/hotels'
 
+<!-- get hotel details -->
+curl -X GET -v -i 'localhost:9090/hotel/2'
+
 <!-- create room -->
 curl -X POST -d '{
-    "hotel_id": 1,
+    "hotel_id": 2,
     "rate_per_hour": "60"
 }' -v -i 'localhost:9090/room'
 
 <!-- Get room -->
-curl -X GET -v -i 'localhost:9090/room/1/1'
-
-
+curl -X GET -v -i 'localhost:9090/room/2/1'
 
 
 <!-- Rent room -->
 curl -X PUT -d '{
     "user_id":1,
-    "rented_from": "2021-12-02 20:05:00",
-    "rented_to": "2021-12-02 20:40:00"
-}' -v -i 'localhost:9090/room/1/1'
+    "rented_from": "2021-12-03 21:45:00",
+    "rented_to": "2021-12-03 21:50:00"
+}' -v -i 'localhost:9090/room/2/3'
+
+<!-- Room Bookings -->
+curl -X GET -v -i 'localhost:9090/bookings/3'
 
 
 docker build -t hotel-rental .

@@ -11,6 +11,7 @@ type RoomServicer interface {
 	CreateRoom(ctx context.Context, room db.Room) (err error)
 	GetRoom(ctx context.Context, roomID, hotelID int64) (room db.Room, err error)
 	RentRoom(ctx context.Context, req db.BookRoomRequest) (status db.RoomStatus, err error)
+	GetRoomBookings(ctx context.Context, roomID int64) (bookings []db.Booking, err error)
 }
 
 type roomService struct {
@@ -59,5 +60,14 @@ func (s *roomService) RentRoom(ctx context.Context, req db.BookRoomRequest) (sta
 		UserID: req.UserID,
 	})
 	status = db.RentedSuccessfully
+	return
+}
+
+func (s *roomService) GetRoomBookings(ctx context.Context, roomID int64) (bookings []db.Booking, err error) {
+	bookings, err = s.Store.GetRoomBookings(ctx, roomID)
+	if err != nil {
+		log.Println("failed to get room bookings", err.Error())
+		return
+	}
 	return
 }

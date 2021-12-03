@@ -12,4 +12,5 @@ const (
 		VALUES ($1, $2, $3, $4)`
 	// updateIsRentedForRoom = `UPDATE rooms SET is_rented=$3 WHERE id=$1 AND hotel_id=$2`
 	slotAvailability = `SELECT * FROM bookings WHERE room_id=$1 AND (rented_to >= $2 AND rented_from <= $3);`
+	getRoomBookings  = `SELECT * FROM bookings WHERE room_id=$1`
 )

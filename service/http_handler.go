@@ -228,3 +228,34 @@ func RentRoom(deps Dependencies) http.HandlerFunc {
 		rw.Write([]byte(status))
 	})
 }
+
+func GetRoomBookings(deps Dependencies) http.HandlerFunc {
+	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
+		vars := mux.Vars(r)
+		roomID, err := strconv.ParseInt(vars["id"], 10, 64)
+		if err != nil {
+			log.Println("invalid request", err.Error())
+			rw.WriteHeader(http.StatusBadRequest)
+			rw.Write([]byte("invalid room id"))
+			return
+		}
+
+		roomBookings, err := deps.RoomService.GetRoomBookings(r.Context(), roomID)
+		if err != nil {
+			log.Println("failed to get room details", err.Error())
+			rw.WriteHeader(http.StatusInternalServerError)
+			rw.Write([]byte("failed to get room data"))
+			return
+		}
+
+		rawRoomBookings, err := json.Marshal(roomBookings)
+		if err != nil {
+			log.Println("failed to read room details", err.Error())
+			rw.WriteHeader(http.StatusInternalServerError)
+			rw.Write([]byte("failed to read room data"))
+			return
+		}
+		rw.Write(rawRoomBookings)
+		rw.WriteHeader(http.StatusOK)
+	})
+}

@@ -24,6 +24,7 @@ type RoomStorer interface {
 	RentRoom(ctx context.Context, req BookRoomRequest) (err error)
 	CreateRoom(ctx context.Context, room Room) (err error)
 	SlotAvailability(ctx context.Context, roomID int64, from, to string) (available bool, err error)
+	GetRoomBookings(ctx context.Context, roomID int64) (bookings []Booking, err error)
 }
 
 type Storer interface {

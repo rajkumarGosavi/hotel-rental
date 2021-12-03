@@ -3,7 +3,6 @@ package db
 import (
 	"context"
 	"database/sql"
-	"fmt"
 	"time"
 )
 
@@ -75,16 +74,18 @@ func (s *pgStore) RentRoom(ctx context.Context, req BookRoomRequest) (err error)
 // and rented_form is more than the end_time
 func (s *pgStore) SlotAvailability(ctx context.Context, roomID int64, from, to string) (available bool, err error) {
 	var slot Booking
-	fmt.Println("from", from, "to", to)
 	err = s.db.GetContext(ctx, &slot, slotAvailability, roomID, from, to)
 	if err != nil {
 		if err.Error() == sql.ErrNoRows.Error() {
-			fmt.Println("no rows")
 			available = true
 			err = nil
 			return
 		}
-		fmt.Println("some err", err.Error())
 	}
+	return
+}
+
+func (s *pgStore) GetRoomBookings(ctx context.Context, roomID int64) (bookings []Booking, err error) {
+	err = s.db.SelectContext(ctx, &bookings, getRoomBookings, roomID)
 	return
 }
