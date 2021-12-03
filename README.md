@@ -1,14 +1,14 @@
 
 CREATE DATABASE hotel_rental;
 
-CREATE TABLE hotels (id serial PRIMARY KEY, name varchar(255), address varchar(255));
+CREATE TABLE IF NOT EXISTS hotels (id serial PRIMARY KEY, name varchar(255), address varchar(255));
 
-CREATE TABLE rooms (id serial PRIMARY KEY, hotel_id int, rate_per_hour varchar(11),
+CREATE TABLE IF NOT EXISTS rooms (id serial PRIMARY KEY, hotel_id int, rate_per_hour varchar(11),
 CONSTRAINT fk_hotels FOREIGN KEY (hotel_id) REFERENCES hotels(id));
 
-CREATE TABLE users (id serial PRIMARY KEY, name varchar(255));
+CREATE TABLE IF NOT EXISTS users (id serial PRIMARY KEY, name varchar(255));
 
-CREATE TABLE bookings (id serial PRIMARY KEY, room_id int, user_id int, rented_from timestamp, rented_to timestamp, CONSTRAINT fk_rooms FOREIGN KEY (room_id) REFERENCES rooms(id), CONSTRAINT fk_users FOREIGN KEY (user_id) REFERENCES users(id));
+CREATE TABLE IF NOT EXISTS bookings (id serial PRIMARY KEY, room_id int, user_id int, rented_from timestamp, rented_to timestamp, CONSTRAINT fk_rooms FOREIGN KEY (room_id) REFERENCES rooms(id), CONSTRAINT fk_users FOREIGN KEY (user_id) REFERENCES users(id));
 
 INSERT INTO users (name) VALUES ('test_user');
 
@@ -42,3 +42,10 @@ curl -X PUT -d '{
     "rented_from": "2021-12-02 20:05:00",
     "rented_to": "2021-12-02 20:40:00"
 }' -v -i 'localhost:9090/room/1/1'
+
+
+docker build -t hotel-rental .
+docker build -t postgres .
+<!-- docker run --rm -p 9090:9090 hotel-rental -->
+docker-compose up
+docker-compose down

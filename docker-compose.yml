@@ -1,0 +1,24 @@
+version: '3'
+services: 
+  app:  
+    depends_on:
+      - postgres
+    build: .
+    restart: always
+    ports:
+      - "9090:9090"
+    environment:
+      DB_URI: "postgresql://postgres:postgres@postgres:5432/hotel_rental?sslmode=disable"
+  postgres:
+    build: ./postgres
+    image: postgres
+    restart: always
+    environment:
+        - POSTGRES_USER=postgres
+        - POSTGRES_PASSWORD=postgres
+        - APP_DB_USER=postgres
+        - APP_DB_PASS=postgres
+        - POSTGRES_DB=hotel_rental
+    ports:
+      - "5432:5432"
+    
